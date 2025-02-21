@@ -6,7 +6,7 @@ from io import BytesIO
 import numpy as np
 from urllib.parse import unquote, urlparse
 
-ALLOWED_EXTENSIONS = ('.png', '.jpg', '.jpeg', '.bmp', '.gif', '.tiff')
+ALLOWED_EXTENSIONS = ('.png', '.jpg', '.jpeg', '.bmp', '.gif', '.tiff', '.avif', '.webp', '.heic', '.heif')
 MAX_IMAGE_SIZE = 10 * 1024 * 1024
 
 class KimaraAIImageFromURL:
