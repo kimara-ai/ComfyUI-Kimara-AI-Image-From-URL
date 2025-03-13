@@ -1,0 +1,19 @@
+[33m9f13f9a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32madd-custom-timeout-parameter-to-image-from-url[m[33m)[m HEAD@{0}: checkout: moving from main to add-custom-timeout-parameter-to-image-from-url
+[33mb97895a[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m HEAD@{1}: checkout: moving from add-custom-timeout-parameter-to-image-from-url to main
+[33m9f13f9a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32madd-custom-timeout-parameter-to-image-from-url[m[33m)[m HEAD@{2}: commit: requirments.txt lisätty
+[33mfcb4b85[m HEAD@{3}: commit: reguirments.txt lisätty
+[33mb97895a[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m HEAD@{4}: checkout: moving from main to add-custom-timeout-parameter-to-image-from-url
+[33mb97895a[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m HEAD@{5}: checkout: moving from uusi-branch to main
+[33mcc6a738[m[33m ([m[1;32muusi-branch[m[33m)[m HEAD@{6}: checkout: moving from main to uusi-branch
+[33mb97895a[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m HEAD@{7}: checkout: moving from uusi-branch to main
+[33mcc6a738[m[33m ([m[1;32muusi-branch[m[33m)[m HEAD@{8}: checkout: moving from main to uusi-branch
+[33mb97895a[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m HEAD@{9}: checkout: moving from uusi-branch to main
+[33mcc6a738[m[33m ([m[1;32muusi-branch[m[33m)[m HEAD@{10}: checkout: moving from main to uusi-branch
+[33mb97895a[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m HEAD@{11}: checkout: moving from uusi-branch to main
+[33mcc6a738[m[33m ([m[1;32muusi-branch[m[33m)[m HEAD@{12}: checkout: moving from main to uusi-branch
+[33mb97895a[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m HEAD@{13}: checkout: moving from uusi-branch to main
+[33mcc6a738[m[33m ([m[1;32muusi-branch[m[33m)[m HEAD@{14}: commit: Luodaan requirements.txt
+[33mb97895a[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m HEAD@{15}: checkout: moving from main to uusi-branch
+[33mb97895a[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m HEAD@{16}: checkout: moving from add-custom-timeout-parameter-to-image-from-url to main
+[33mb97895a[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m HEAD@{17}: checkout: moving from main to add-custom-timeout-parameter-to-image-from-url
+[33mb97895a[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m HEAD@{18}: clone: from github.com:kimara-ai/ComfyUI-Kimara-AI-Image-From-URL.git
