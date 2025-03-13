@@ -16,7 +16,8 @@ class KimaraAIImageFromURL:
         return {
             "required": {
                 "url": ("STRING", {"multiline": False, "default": "", "lazy": False}),
-                "megapixels": ("FLOAT", {"default": 1, "min": 0, "max": 20, "step": 0.1})
+                "megapixels": ("FLOAT", {"default": 1, "min": 0, "max": 20, "step": 0.1}),
+                "timeout": ("INT", {"default": 10, "min": 1, "max": 60, "step": 1})
             }
         }
 
@@ -24,16 +25,19 @@ class KimaraAIImageFromURL:
     FUNCTION = "execute"
     CATEGORY = "Kimara.ai"
 
-    def execute(self, url, megapixels):
+    def execute(self, url, megapixels, timeout):
         self.validate_url(url)
+        self.validate_timeout(timeout)
         try:
-            with urllib.request.urlopen(url, timeout=10) as response:
+            with urllib.request.urlopen(url, timeout) as response:
                 content = response.read()
             if self.is_valid_image(content):
                 img = Image.open(BytesIO(content))
             image_tensor, mask_tensor = self.process_image(img, megapixels)
         except (urllib.error.URLError, IOError) as e:
             raise ValueError(f"Error loading image from '{url}': {e}")
+        except TimeoutError:
+            raise ValueError(f"Timeout ocurred when loading image from '{url}'. Try increasing the timeout value.")
         return image_tensor, mask_tensor
 
     def validate_url(self, url):
@@ -47,6 +51,17 @@ class KimaraAIImageFromURL:
         if not parsed_url.path or not parsed_url.netloc:
             raise ValueError(f"Invalid URL. The URL is improperly formed after unquoting.")
         return url
+    
+    def validate_timeout(self, timeout):
+        timeout_info = ("INT", {"default": 10, "min": 1, "max": 60, "step": 1})
+        min_value = timeout_info[1]["min"]
+        max_value = timeout_info[1]["max"]
+        if (timeout != (int)):
+            raise ValueError(f"Timeout must be a number")
+        if timeout < min_value or timeout > max_value:
+            raise ValueError(f"Timeout value {timeout} is out of range ({min_value}s-{max_value}s).")
+        return timeout
+
 
     def is_valid_image(self, content):
         if len(content) > MAX_IMAGE_SIZE:
