@@ -29,7 +29,7 @@ class KimaraAIImageFromURL:
         self.validate_url(url)
         self.validate_timeout(timeout)
         try:
-            with urllib.request.urlopen(url, timeout) as response:
+            with urllib.request.urlopen(url, timeout = timeout) as response:
                 content = response.read()
             if self.is_valid_image(content):
                 img = Image.open(BytesIO(content))
@@ -56,8 +56,8 @@ class KimaraAIImageFromURL:
         timeout_info = ("INT", {"default": 10, "min": 1, "max": 60, "step": 1})
         min_value = timeout_info[1]["min"]
         max_value = timeout_info[1]["max"]
-        if (timeout != (int)):
-            raise ValueError(f"Timeout must be a number")
+        if not isinstance(timeout, int):
+            raise ValueError(f"Time out must be a number")
         if timeout < min_value or timeout > max_value:
             raise ValueError(f"Timeout value {timeout} is out of range ({min_value}s-{max_value}s).")
         return timeout
