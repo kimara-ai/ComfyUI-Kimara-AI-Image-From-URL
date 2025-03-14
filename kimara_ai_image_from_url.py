@@ -17,8 +17,7 @@ class KimaraAIImageFromURL:
             "required": {
                 "url": ("STRING", {"multiline": False, "default": "", "lazy": False}),
                 "megapixels": ("FLOAT", {"default": 1, "min": 0, "max": 20, "step": 0.1}),
-                }, "optional": {
-                    "user_agent": ("STRING", {"multiline": False, "default": "ComfyUI Image Downloader/1.0", "lazy": False})
+                "user_agent": ("STRING", {"multiline": False, "default": "ComfyUI Image Downloader/1.0", "lazy": False})
             }
         }
         
@@ -39,7 +38,9 @@ class KimaraAIImageFromURL:
             image_tensor, mask_tensor = self.process_image(img, megapixels)
         except urllib.error.HTTPError as e:
             if e.code == 403:
-                raise ValueError("403 Forbidden: Access is denied")
+                raise ValueError("403 Forbidden:{url} has blocked this request. Try changing the User_Agent.")
+            elif e.code == 404:
+                raise ValueError("404 Not found: The images url is incorrect or no longer available.")
             else:
                 raise ValueError(f"Error loading image from '{url}': {e}")
         except (urllib.error.URLError, IOError) as e:
