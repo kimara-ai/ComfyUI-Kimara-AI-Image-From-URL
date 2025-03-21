@@ -5,6 +5,9 @@ import torch
 from io import BytesIO
 import numpy as np
 from urllib.parse import unquote, urlparse
+import hashlib
+import tempfile
+from pathlib import Path
 
 ALLOWED_EXTENSIONS = ('.png', '.jpg', '.jpeg', '.bmp', '.gif', '.tiff', '.avif', '.webp', '.heic', '.heif')
 MAX_IMAGE_SIZE = 10 * 1024 * 1024
@@ -18,7 +21,8 @@ class KimaraAIImageFromURL:
                 "url": ("STRING", {"multiline": False, "default": "", "lazy": False}),
                 "megapixels": ("FLOAT", {"default": 1, "min": 0, "max": 20, "step": 0.1}),
                 "timeout": ("INT", {"default": 10, "min": 1, "max": 60, "step": 1}),
-                "user_agent": ("STRING", {"multiline": False, "default": "ComfyUI Image Downloader/1.0", "lazy": False})
+                "user_agent": ("STRING", {"multiline": False, "default": "ComfyUI Image Downloader/1.0", "lazy": False}),
+                "cache_enabled": ("BOOLEAN", {"default": True})
             }
         }
         
@@ -27,17 +31,35 @@ class KimaraAIImageFromURL:
     FUNCTION = "execute"
     CATEGORY = "Kimara.ai"
 
-    def execute(self, url, megapixels, timeout, user_agent):
+    def execute(self, url, megapixels, timeout, user_agent, cache_enabled):
         self.validate_url(url)
         self.validate_timeout(timeout)
+        cache_path = self.url_to_file_cache(url, cache_enabled)
+        print(f"Cache-tiedoston sijainti: {cache_path}")
+
         try:
-            headers = {"User-Agent": user_agent}
-            http_request = urllib.request.Request(url, headers = headers)
-            with urllib.request.urlopen(http_request, timeout = timeout) as response:
-                content = response.read()
+            if cache_enabled and cache_path.exists():
+                try:
+                    with cache_path.open('rb') as f:
+                        content = f.read()
+                    print(f"Loaded succesfully")
+                except IOError as e:
+                    print(f"Failed to load cache: {e}.")
+
+            else:
+                headers = {"User-Agent": user_agent}
+                http_request = urllib.request.Request(url, headers = headers)
+                with urllib.request.urlopen(http_request, timeout = timeout) as response:
+                    content = response.read()
+                if cache_enabled:
+                    with cache_path.open('wb') as f:
+                        f.write(content)
+               
+        
             if self.is_valid_image(content):
                 img = Image.open(BytesIO(content))
             image_tensor, mask_tensor = self.process_image(img, megapixels)
+            
         except urllib.error.HTTPError as e:
             if e.code == 403:
                 raise ValueError("403 Forbidden:{url} has blocked this request. Try changing the User_Agent.")
@@ -49,7 +71,9 @@ class KimaraAIImageFromURL:
             raise ValueError(f"Error loading image from '{url}': {e}")
         except TimeoutError:
             raise ValueError(f"Timeout ocurred when loading image from '{url}'. Try increasing the timeout value.")
+        print(f"Image {url}")
         return image_tensor, mask_tensor
+        
 
     def validate_url(self, url):
         parsed_url = urlparse(url)
@@ -64,13 +88,8 @@ class KimaraAIImageFromURL:
         return url
     
     def validate_timeout(self, timeout):
-        timeout_info = ("INT", {"default": 10, "min": 1, "max": 60, "step": 1})
-        min_value = timeout_info[1]["min"]
-        max_value = timeout_info[1]["max"]
         if not isinstance(timeout, int):
             raise ValueError(f"Time out must be a number")
-        if timeout < min_value or timeout > max_value:
-            raise ValueError(f"Timeout value {timeout} is out of range ({min_value}s-{max_value}s).")
         return timeout
 
 
@@ -111,7 +130,23 @@ class KimaraAIImageFromURL:
         new_width = int(width * scaling_factor)
         new_height = int(height * scaling_factor)
         return img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+    
+    def cache_directory(self):
+        dir = Path(__file__).parent
+        path = dir / 'cache'
+        path.mkdir(parents=True, exist_ok=True)
+        return path
+    
+    def url_to_file_cache(self, url, cache_enabled=True):
+        if not cache_enabled:
+            return None
+        cache_hashed = hashlib.sha224(url.encode()).hexdigest()
+        dir = self.cache_directory()
+        cache_path = dir / f"{cache_hashed}.cache"
+        return cache_path
 
+    
+       
 NODE_CLASS_MAPPINGS = {
     "KimaraAIImageFromURL": KimaraAIImageFromURL
 }
