@@ -35,7 +35,7 @@ class KimaraAIImageFromURL:
         self.validate_url(url)
         self.validate_timeout(timeout)
         cache_path = self.url_to_file_cache(url, cache_enabled)
-        print(f"Cache-tiedoston sijainti: {cache_path}")
+        print(f"Cache-file's location: {cache_path}")
 
         try:
             if cache_enabled and cache_path.exists():
